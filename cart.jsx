@@ -74,6 +74,12 @@ const dataFetchReducer = (state, action) => {
   }
 };
 
+const generateImageURL = () => {
+  const randomId = Math.floor(Math.random() * 1000); // Genera un ID aleatorio entre 0 y 999
+  return `https://picsum.photos/id/${randomId}/50/50`;
+};
+
+
 const Products = (props) => {
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
