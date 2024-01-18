@@ -101,10 +101,10 @@ const Products = (props) => {
   // Fetch Data
   const addToCart = (e) => {
     let name = e.target.name;
-    let item = items.filter((item) => item.name == name);
+    let item = items.filter((item) => item.name == name)[0];//Buscar el producto
     console.log(`add to Cart ${JSON.stringify(item)}`);
+    item.imageURL=generateImageURL();//asociar la URL de la imagen aleatoria
     setCart([...cart, ...item]);
-    //doFetch(query);
   };
   const deleteCartItem = (index) => {
     let newCart = cart.filter((item, i) => index != i);
