@@ -79,7 +79,6 @@ const generateImageURL = () => {
   return `https://picsum.photos/id/${randomId}/50/50`;
 };
 
-
 const Products = (props) => {
   const [items, setItems] = React.useState(products);
   const [cart, setCart] = React.useState([]);
@@ -110,7 +109,7 @@ const Products = (props) => {
     let item = items.filter((item) => item.name == name)[0];//Buscar el producto
     console.log(`add to Cart ${JSON.stringify(item)}`);
     item.imageURL=generateImageURL();//asociar la URL de la imagen aleatoria
-    setCart([...cart, ...item]);
+    setCart([...cart, item]);
   };
   const deleteCartItem = (index) => {
     let newCart = cart.filter((item, i) => index != i);
