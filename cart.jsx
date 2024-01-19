@@ -103,29 +103,49 @@ const Products = (props) => {
     }
   );
   console.log(`Rendering Products ${JSON.stringify(data)}`);
-  // Fetch Data
+  
+  //Función para agregar productos al carrito
   const addToCart = (e) => {
     let name = e.target.name;
-    let item = items.filter((item) => item.name == name)[0];//Buscar el producto
-    console.log(`add to Cart ${JSON.stringify(item)}`);
-    item.imageURL=generateImageURL();//asociar la URL de la imagen aleatoria
-    setCart([...cart, item]);
-  };
+    let item = items.filter((item) => item.name === name)[0];//Buscar el producto
+    if(item && item.instock > 0){
+      //Veficiar si hay suficiente stock
+      item.imageURL = generateImageURL(); // Asociar la URL de la imagen
+      setCart([...cart, item]);
+      //Reducir en 1 la cantidad de productos disponibles en el stock
+      setItems((prevItems) =>
+        prevItems.map((prevItem) =>
+        prevItem.name === item.name
+          ? {...prevItem, instock: prevItem.instock - 1}
+          : prevItem
+          )
+          );
+    }
+    };
+    
+     
+
+  //Función para eliminar productos del carrito
   const deleteCartItem = (index) => {
-    let newCart = cart.filter((item, i) => index != i);
-    setCart(newCart);
+   const removedItem = cart[index];
+   setCart(cart.filter((item, i)=> i !== index));
+   setItems((prevItems) =>
+   prevItems.map((prevItem) =>
+    prevItem.name === removedItem.name ? { ...prevItem, instock: prevItem.instock + 1} : prevItem
+   )
+   );
   };
   const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
 
   let list = items.map((item, index) => {
   let n = index + 1049;
-  let url = "https://picsum.photos/id/" + n + "/50/50";
+  let url = `https://picsum.photos/id/${n}/50/50`;
 
     return (
       <li key={index}>
         <Image src={photos[index % 4]} width={70} roundedCircle></Image>
         <Button variant="primary" size="large">
-          {item.name}:{item.cost}
+          {item.name}:{item.cost} (stock: {item.instock})
         </Button>
         <input name={item.name} type="submit" onClick={addToCart}></input>
       </li>
@@ -171,7 +191,7 @@ const Products = (props) => {
     return newTotal;
   };
   // TODO: implement the restockProducts function
-  const restockProducts = (url) => {};
+ // const restockProducts = (url) => {};
 
   return (
     <Container>
