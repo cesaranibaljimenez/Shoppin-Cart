@@ -139,7 +139,7 @@ const Products = (props) => {
 
   let list = items.map((item, index) => {
   let n = index + 1049;
-  let url = `https://picsum.photos/id/${n}/50/50`;
+  let url = "https://picsum.photos/id/" + n + "/50/50";
 
     return (
       <li key={index}>
@@ -191,7 +191,19 @@ const Products = (props) => {
     return newTotal;
   };
   // TODO: implement the restockProducts function
- // const restockProducts = (url) => {};
+  const restockProducts = (url) => {
+    doFetch(url).then((response) => {
+      const newData = response.data; // Suponiendo que los datos están disponibles en la propiedad 'data' de la respuesta
+      let newItems = newData.map((item) => {
+        let { name, country, cost, instock } = item;
+        return { name, country, cost, instock};
+      });
+      setItems([...items, ...newItems]);
+    }).catch((error) => {
+      console.error('Error al obtener datos:', error);
+    });
+  };
+  
 
   return (
     <Container>
