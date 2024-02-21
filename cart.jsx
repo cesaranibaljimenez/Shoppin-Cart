@@ -95,9 +95,9 @@ const Products = (props) => {
   } = ReactBootstrap;
   //  Fetch Data
   const { Fragment, useState, useEffect, useReducer } = React;
-  const [query, setQuery] = useState("http://localhost:1337/products");
+  const [query, setQuery] = useState("http://localhost:1337/api/products");
   const [{ data, isLoading, isError }, doFetch] = useDataApi(
-    "http://localhost:1337/products",
+    "http://localhost:1337/api/products",
     {
       data: [],
     }
@@ -135,15 +135,14 @@ const Products = (props) => {
    )
    );
   };
-  const photos = ["apple.png", "orange.png", "beans.png", "cabbage.png"];
-
+ 
   let list = items.map((item, index) => {
   let n = index + 1049;
   let url = "https://picsum.photos/id/" + n + "/50/50";
 
     return (
       <li key={index}>
-        <Image src={photos[index % 4]} width={70} roundedCircle></Image>
+        <Image src={`https://picsum.photos/id/${n}/50/50`} width={70} roundedCircle />
         <Button variant="primary" size="large">
           {item.name}:{item.cost} (stock: {item.instock})
         </Button>
@@ -192,17 +191,25 @@ const Products = (props) => {
   };
   // TODO: implement the restockProducts function
   const restockProducts = (url) => {
-    doFetch(url).then((response) => {
-      const newData = response.data; // Suponiendo que los datos están disponibles en la propiedad 'data' de la respuesta
-      let newItems = newData.map((item) => {
-        let { name, country, cost, instock } = item;
-        return { name, country, cost, instock};
+    fetch(url)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return response.json();
+      })
+      .then(data => {
+        let newItems = data.map((item) => {
+          let { name, country, cost, instock } = item;
+          return { name, country, cost, instock};
+        });
+        setItems([...items, ...newItems]);
+      })
+      .catch(error => {
+        console.error('Error fetching products:', error);
       });
-      setItems([...items, ...newItems]);
-    }).catch((error) => {
-      console.error('Error al obtener datos:', error);
-    });
   };
+  
   
 
   return (
@@ -225,7 +232,7 @@ const Products = (props) => {
       <Row>
         <form
           onSubmit={(event) => {
-            restockProducts(`http://localhost:1337/${query}`);
+            restockProducts(`http://localhost:1337/api/products/${query}`);
             console.log(`Restock called on ${query}`);
             event.preventDefault();
           }}
