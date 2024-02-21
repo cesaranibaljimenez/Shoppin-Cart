@@ -190,25 +190,23 @@ const Products = (props) => {
     return newTotal;
   };
   // TODO: implement the restockProducts function
-  const restockProducts = (query) => {
-    fetch(url)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        let newItems = data.map((item) => {
+ 
+  const restockProducts = (url) => {
+    doFetch(url)
+      .then((response) => {
+        const newData = response.data;
+        let newItems = newData.map((item) => {
           let { name, country, cost, instock } = item;
-          return { name, country, cost, instock};
+          return { name, country, cost, instock };
         });
         setItems([...items, ...newItems]);
       })
-      .catch(error => {
-        console.error('Error fetching products:', error);
+      .catch((error) => {
+        console.error('Error al obtener datos:', error);
       });
   };
+  
+
   
   
 
