@@ -190,7 +190,7 @@ const Products = (props) => {
     return newTotal;
   };
   // TODO: implement the restockProducts function
-  const restockProducts = (url) => {
+  const restockProducts = (query) => {
     fetch(url)
       .then(response => {
         if (!response.ok) {
