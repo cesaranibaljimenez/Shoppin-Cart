@@ -136,20 +136,21 @@ const Products = (props) => {
    );
   };
  
-  let list = items.map((item, index) => {
-  let n = index + 1049;
-  let url = "https://picsum.photos/id/" + n + "/50/50";
+  let productList = (
+    <ul style={{ listStyleType: "none" }}>
+      {items.map((item, index) => (
+        <li key={index}>
+          <Image src={item.imageURL} width={70} roundedCircle />
+          <Button variant="primary" size="large">
+            {item.name}:{item.cost} (stock: {item.instock})
+          </Button>
+          <input name={item.name} type="submit" onClick={addToCart}></input>
+        </li>
+      ))}
+    </ul>
+  );
+  
 
-    return (
-      <li key={index}>
-        <Image src={`https://picsum.photos/id/${n}/50/50`} width={70} roundedCircle />
-        <Button variant="primary" size="large">
-          {item.name}:{item.cost} (stock: {item.instock})
-        </Button>
-        <input name={item.name} type="submit" onClick={addToCart}></input>
-      </li>
-    );
-  });
   let cartList = cart.map((item, index) => {
     return (
       <Card key={index}>
@@ -199,23 +200,26 @@ const Products = (props) => {
           let { name, country, cost, instock } = item;
           return { name, country, cost, instock };
         });
-        setItems([...items, ...newItems]);
+      
+        console.log('New Items:', newItems);
+        setItems((prevItems) => [...prevItems, ...newItems]); // Agregar nuevos productos sin sobrescribir los existentes
+        console.log(newItems);
+        console.log(items);
       })
       .catch((error) => {
         console.error('Error al obtener datos:', error);
       });
+      
   };
   
-
   
   
-
   return (
     <Container>
       <Row>
         <Col>
           <h1>Product List</h1>
-          <ul style={{ listStyleType: "none" }}>{list}</ul>
+          {productList}
         </Col>
         <Col>
           <h1>Cart Contents</h1>
